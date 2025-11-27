@@ -13,16 +13,20 @@ public class BallController : MonoBehaviour
     [SerializeField] private Transform parentMarker; // El marcador AR donde se coloca la bola
 
     private Animator doorAnimator;
+    private Gacha gachaManager;
+    private Transform prizePoint;
 
     // -------------------------------
     // Inicializar bola desde Gacha
     // -------------------------------
-    public void Initialize(int rarity, GachaItem item, Transform marker, Animator door)
+    public void Initialize(int rarity, GachaItem item, Transform marker, Animator door, Gacha manager,Transform prizePoint)
     {
         this.rarity = rarity;
         this.containedItem = item;
         this.parentMarker = marker;
         this.doorAnimator = door;
+        this.gachaManager = manager;
+        this.prizePoint = prizePoint;
 
         // Posicionar la bola sobre el marcador AR
         transform.SetParent(parentMarker);
@@ -57,7 +61,7 @@ public class BallController : MonoBehaviour
         if (isOpened) return;
 
         // Para touch en móvil
-        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
         {
             Vector2 touchPos = Touchscreen.current.primaryTouch.position.ReadValue();
             Ray ray = Camera.main.ScreenPointToRay(touchPos);
@@ -74,6 +78,7 @@ public class BallController : MonoBehaviour
         {
             Vector2 mousePos = Mouse.current.position.ReadValue();
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
+
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 if (hit.transform == transform)
@@ -102,14 +107,18 @@ public class BallController : MonoBehaviour
         if (animator != null)
             animator.SetTrigger("Open");
 
+        GameObject premio = null;
         if (containedItem != null && containedItem.GetPrefab() != null)
         {
-            Instantiate(containedItem.GetPrefab(), transform.position + Vector3.up * 0.2f, Quaternion.identity);
+            premio = Instantiate(containedItem.GetPrefab(), prizePoint.position, Quaternion.identity);
+            premio.transform.SetParent(prizePoint); 
         }
-
 
         if (doorAnimator != null)
             doorAnimator.SetBool("isOpen", false);
+
+        if (gachaManager != null)
+            gachaManager.MostrarPremio(premio);
 
         Destroy(gameObject, 0.5f);
     }

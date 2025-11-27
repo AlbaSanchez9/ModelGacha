@@ -7,30 +7,39 @@ public class Gacha : MonoBehaviour
     private GachaItem[] items;          // la lista de items se crea por código
     private GameObject[] ballPrefabs;     // "plantilla" de bola que creamos en Start()
 
-    [Header("Bolas")]
     [SerializeField] private Transform spawnPoint;       // punto donde aparecerán las bolas
-
-    [Header("Palanca")]
+    [SerializeField] private Transform prizePoint;
     [SerializeField] private Animator palancaAnimator;
-
-    [Header("Puerta")]
     [SerializeField] private Animator doorAnimator;
+    [SerializeField] private GameObject maquinaCompleta;
+    [SerializeField] private Animator maquinaAnimator;
+    [SerializeField] private GameObject botonVolver;
+    [SerializeField] private GameObject botonTirar;
 
     [SerializeField] private float bolaDelay = 0.3f; // delay entre palanca y bola
+
+    private GameObject premioActual;
+    private bool bolaEnJuego = false;
 
     void Start()
     {
         LoadBallPrefabs();   // Cargar las bolas de diferentes rarezas
         CreateItems();       // Crear la lista de premios
+        botonVolver.SetActive(false);
     }
 
     public void TirarPalanca()
     {
-        StartCoroutine(TirarConDelay(bolaDelay));
+        if (!bolaEnJuego) 
+        {
+            StartCoroutine(TirarConDelay(bolaDelay));
+        }
     }
 
     private IEnumerator TirarConDelay(float delay)
     {
+        bolaEnJuego = true;
+
         // 1️⃣ Activar animación de la palanca
         if (palancaAnimator != null)
             palancaAnimator.SetTrigger("Pull");
@@ -95,9 +104,9 @@ public class Gacha : MonoBehaviour
         // Inicializar el BallController de la bola
         BallController bc = ball.GetComponent<BallController>();
         if (bc != null)
-            bc.Initialize(rarity, selectedItem, spawnPoint, doorAnimator); // spawnPoint = Transform del marcador AR
+            bc.Initialize(rarity, selectedItem, spawnPoint, doorAnimator, this, prizePoint); // spawnPoint = Transform del marcador AR
         else
-            Debug.LogError("❌ El prefab de la bola no tiene BallController.");
+            Debug.LogError("El prefab de la bola no tiene BallController.");
     }
 
     private int GetRandomRarity()
@@ -125,10 +134,60 @@ public class Gacha : MonoBehaviour
 
         if (filtered == null || filtered.Length == 0)
         {
-            Debug.LogWarning("⚠️ No hay items con rareza " + rarity + ". Devolviendo el primero disponible.");
+            Debug.LogWarning("No hay items con rareza " + rarity + ". Devolviendo el primero disponible.");
             return items.Length > 0 ? items[0] : null;
         }
 
         return filtered[Random.Range(0, filtered.Length)];
+    }
+
+    public void MostrarPremio(GameObject premio)
+    {
+        // Guardamos el premio para destruirlo al volver
+        premioActual = premio;
+        HideMachine();
+        if (botonTirar != null)
+            botonTirar.SetActive(false);
+    }
+
+    public void HideMachine()
+    {
+        botonVolver.SetActive(true);
+        if (maquinaAnimator != null)
+            maquinaAnimator.SetTrigger("Desaparece");
+        else
+            maquinaCompleta.SetActive(false);
+    }
+
+    public void ShowMachine()
+    {
+        botonVolver.SetActive(false);
+        if (maquinaAnimator != null)
+            maquinaAnimator.SetTrigger("Aparece");
+        else
+            maquinaCompleta.SetActive(true);
+
+        if (doorAnimator != null)
+        {
+            doorAnimator.SetBool("isOpen", false);
+            doorAnimator.Play("IdlePuerta", 0, 0f);
+            doorAnimator.Update(0f);
+        }
+
+        bolaEnJuego = false;
+    }
+
+    public void ResetToMachine()
+    {
+        if (premioActual != null)
+        {
+            Destroy(premioActual);
+            premioActual = null;
+        }
+
+        ShowMachine();
+
+        if (botonTirar != null)
+            botonTirar.SetActive(true);
     }
 }
