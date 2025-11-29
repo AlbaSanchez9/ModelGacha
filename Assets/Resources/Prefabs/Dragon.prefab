@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1571637951425177574}
   - component: {fileID: 68321357508232187}
   - component: {fileID: 5610420326820904581}
+  - component: {fileID: 6780129328883071459}
   m_Layer: 0
   m_Name: Dragon
   m_TagString: Untagged
@@ -111,3 +112,15 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6780129328883071459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7038601356445166077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91c24edc54705394f8ab26ca6c73e166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PrizeController

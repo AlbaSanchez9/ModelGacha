@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Gacha : MonoBehaviour
 {
-
     private GachaItem[] items;          // la lista de items se crea por código
     private GameObject[] ballPrefabs;     // "plantilla" de bola que creamos en Start()
 
@@ -23,6 +22,9 @@ public class Gacha : MonoBehaviour
 
     void Start()
     {
+        //MusicManager.Instance.LoadMusic("MiMusicaGacha");
+        //MusicManager.Instance.Play();
+
         LoadBallPrefabs();   // Cargar las bolas de diferentes rarezas
         CreateItems();       // Crear la lista de premios
         botonVolver.SetActive(false);
@@ -32,6 +34,7 @@ public class Gacha : MonoBehaviour
     {
         if (!bolaEnJuego) 
         {
+            AudioManager.Instance.PlayClickGacha();
             StartCoroutine(TirarConDelay(bolaDelay));
         }
     }

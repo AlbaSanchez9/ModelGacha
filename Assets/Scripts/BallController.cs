@@ -110,15 +110,26 @@ public class BallController : MonoBehaviour
         GameObject premio = null;
         if (containedItem != null && containedItem.GetPrefab() != null)
         {
+            bool esNuevo = !InventoryManager.Instance.TieneItem(containedItem.GetPrefab());
+
             premio = Instantiate(containedItem.GetPrefab(), prizePoint.position, Quaternion.identity);
-            premio.transform.SetParent(prizePoint); 
+            premio.transform.SetParent(prizePoint);
+
+            InventoryManager.Instance.AddItem(containedItem.GetPrefab());
+
+            if (esNuevo)
+                AudioManager.Instance.PlayNuevoPremio();
+            else
+                AudioManager.Instance.PlayPremioRepetido();
         }
 
         if (doorAnimator != null)
             doorAnimator.SetBool("isOpen", false);
 
         if (gachaManager != null)
+        {
             gachaManager.MostrarPremio(premio);
+        }
 
         Destroy(gameObject, 0.5f);
     }

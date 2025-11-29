@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig>
   <Tracking>
+    <ImageTarget name="target_logo" size="1.000000 0.706956" />
     <ImageTarget name="tarjet_gacha" size="1.000000 1.414516" />
   </Tracking>
 </QCARConfig>
