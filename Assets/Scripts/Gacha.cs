@@ -8,10 +8,13 @@ public class Gacha : MonoBehaviour
 
     [SerializeField] private Transform spawnPoint;       // punto donde aparecerán las bolas
     [SerializeField] private Transform prizePoint;
+
     [SerializeField] private Animator palancaAnimator;
     [SerializeField] private Animator doorAnimator;
+
     [SerializeField] private GameObject maquinaCompleta;
     [SerializeField] private Animator maquinaAnimator;
+
     [SerializeField] private GameObject botonVolver;
     [SerializeField] private GameObject botonTirar;
 
@@ -19,6 +22,9 @@ public class Gacha : MonoBehaviour
 
     private GameObject premioActual;
     private bool bolaEnJuego = false;
+
+    [SerializeField] private GameObject feedbackPanel;
+    [SerializeField] private TMPro.TextMeshProUGUI feedbackText;
 
     void Start()
     {
@@ -188,9 +194,28 @@ public class Gacha : MonoBehaviour
             premioActual = null;
         }
 
+        if (feedbackPanel != null && feedbackPanel.activeSelf)
+            feedbackPanel.SetActive(false);
+
         ShowMachine();
 
         if (botonTirar != null)
             botonTirar.SetActive(true);
+    }
+
+    public void ShowFeedback(string mensaje)
+    {
+        StopAllCoroutines();        // Por si estaba mostrando otro mensaje antes
+        StartCoroutine(ShowFeedbackRoutine(mensaje));
+    }
+
+    private IEnumerator ShowFeedbackRoutine(string mensaje)
+    {
+        feedbackText.text = mensaje;
+        feedbackPanel.SetActive(true);
+
+        yield return new WaitForSeconds(3f); // Tiempo visible
+
+        feedbackPanel.SetActive(false);
     }
 }

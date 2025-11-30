@@ -108,6 +108,7 @@ public class BallController : MonoBehaviour
             animator.SetTrigger("Open");
 
         GameObject premio = null;
+
         if (containedItem != null && containedItem.GetPrefab() != null)
         {
             bool esNuevo = !InventoryManager.Instance.TieneItem(containedItem.GetPrefab());
@@ -121,6 +122,26 @@ public class BallController : MonoBehaviour
                 AudioManager.Instance.PlayNuevoPremio();
             else
                 AudioManager.Instance.PlayPremioRepetido();
+
+            if (gachaManager != null)
+            {
+                string estado = esNuevo ? "¡NUEVO!" : "Repetido";
+
+                switch (rarity)
+                {
+                    case 3:
+                        gachaManager.ShowFeedback($"Premio 3* — {estado}");
+                        break;
+
+                    case 4:
+                        gachaManager.ShowFeedback($"Premio 4* — {estado}");
+                        break;
+
+                    case 5:
+                        gachaManager.ShowFeedback($"PREMIO 5* — {estado}");
+                        break;
+                }
+            }
         }
 
         if (doorAnimator != null)
