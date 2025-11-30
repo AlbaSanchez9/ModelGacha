@@ -12,7 +12,7 @@ public class PrizeController : MonoBehaviour
     private float lastPinchDistance = 0f;
     private float pinchZoomSpeed = 0.01f;
     private float minScale = 0.2f;
-    private float maxScale = 1f;
+    private float maxScale = 2f;
 
     // Pan (desplazamiento)
     private Vector2 lastPanPos;

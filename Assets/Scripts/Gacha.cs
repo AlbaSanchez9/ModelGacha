@@ -85,7 +85,7 @@ public class Gacha : MonoBehaviour
     {
         items = new GachaItem[3];
 
-        items[0] = new GachaItem("Espada", 3, Resources.Load<GameObject>("Prefabs/Espada"));
+        items[0] = new GachaItem("Tren", 3, Resources.Load<GameObject>("Prefabs/TrenAR"));
         items[1] = new GachaItem("Robot", 4, Resources.Load<GameObject>("Prefabs/Robot"));
         items[2] = new GachaItem("Dragón", 5, Resources.Load<GameObject>("Prefabs/Dragon"));
     }
