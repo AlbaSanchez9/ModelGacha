@@ -27,6 +27,14 @@ public class Gacha : MonoBehaviour
     [SerializeField] private GameObject feedbackPanel;
     [SerializeField] private TMPro.TextMeshProUGUI feedbackText;
 
+    [SerializeField] private GameObject botonVerAnuncio; // Botón para ver anuncio
+    [SerializeField] private int monedas = 0;
+    [SerializeField] private int costoPorTirada = 1;
+    [SerializeField] private TMPro.TextMeshProUGUI monedasText;
+
+    [SerializeField] private GameObject feedbackPanelMonedas;
+    [SerializeField] private TMPro.TextMeshProUGUI feedbackTextMonedas;
+
     void Start()
     {
         //MusicManager.Instance.LoadMusic("MiMusicaGacha");
@@ -35,12 +43,25 @@ public class Gacha : MonoBehaviour
         LoadBallPrefabs();   // Cargar las bolas de diferentes rarezas
         CreateItems();       // Crear la lista de premios
         botonVolver.SetActive(false);
+
+        if (botonVerAnuncio != null)
+        {
+            botonVerAnuncio.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(VerAnuncio);
+        }
+
+        ActualizarUI();
     }
 
     public void TirarPalanca()
     {
-        if (!bolaEnJuego) 
+        if (monedas < costoPorTirada)
         {
+            ShowFeedbackMonedasDispo("No tienes suficientes monedas. Mira un anuncio para conseguir más.");
+        }
+        else if (!bolaEnJuego)
+        {
+            monedas -= costoPorTirada;
+            ActualizarUI();
             AudioManager.Instance.PlayClickGacha();
             StartCoroutine(TirarConDelay(bolaDelay));
         }
@@ -121,10 +142,11 @@ public class Gacha : MonoBehaviour
 
     private int GetRandomRarity()
     {
-        float roll = Random.value;
-        if (roll < 0.7f) return 3;
-        if (roll < 0.95f) return 4;
-        return 5;
+        float roll = Random.value; // Random.value devuelve un float entre 0.0 y 1.0
+        Debug.Log(roll);
+        if (roll < 0.7f) return 3; // 70% de probabilidad de rareza 3
+        if (roll < 0.95f) return 4;// 25% de probabilidad de rareza 4 (0.7 → 0.95)
+        return 5; // 5% de probabilidad de rareza 5 (0.95 → 1.0)
     }
 
     private GameObject GetBallPrefabByRarity(int rarity)
@@ -158,6 +180,10 @@ public class Gacha : MonoBehaviour
         HideMachine();
         if (botonTirar != null)
             botonTirar.SetActive(false);
+        if (botonVerAnuncio != null)
+            botonVerAnuncio.SetActive(false);
+        if (monedasText != null)
+            monedasText.gameObject.SetActive(false);
     }
 
     public void HideMachine()
@@ -202,21 +228,53 @@ public class Gacha : MonoBehaviour
 
         if (botonTirar != null)
             botonTirar.SetActive(true);
+
+        if (botonVerAnuncio != null)
+            botonVerAnuncio.SetActive(true);
+
+        if (monedasText != null)
+            monedasText.gameObject.SetActive(true);
     }
 
     public void ShowFeedback(string mensaje)
     {
         StopAllCoroutines();        // Por si estaba mostrando otro mensaje antes
-        StartCoroutine(ShowFeedbackRoutine(mensaje));
+        StartCoroutine(ShowFeedbackRoutine(feedbackPanel, feedbackText, mensaje));
     }
 
-    private IEnumerator ShowFeedbackRoutine(string mensaje)
+    public void ShowFeedbackMonedasDispo(string mensaje)
     {
-        feedbackText.text = mensaje;
-        feedbackPanel.SetActive(true);
+        StopAllCoroutines();        // Por si estaba mostrando otro mensaje antes
+        StartCoroutine(ShowFeedbackRoutine(feedbackPanelMonedas, feedbackTextMonedas, mensaje));
+    }
+
+    private IEnumerator ShowFeedbackRoutine(GameObject panel, TMPro.TextMeshProUGUI textComponent, string mensaje)
+    {
+        if (panel == null || textComponent == null) yield break;
+
+        textComponent.text = mensaje;
+        panel.SetActive(true);
 
         yield return new WaitForSeconds(3f); // Tiempo visible
 
-        feedbackPanel.SetActive(false);
+        panel.SetActive(false);
+    }
+
+    private void VerAnuncio()
+    {
+        AdsManager.instance.ShowRewardedAd();
+    }
+
+    public void DarMonedas(int cantidad)
+    {
+        monedas += cantidad;
+        ShowFeedbackMonedasDispo("¡Has conseguido " + cantidad + " monedas!");
+        ActualizarUI();
+    }
+
+    private void ActualizarUI()
+    {
+        if (monedasText != null)
+            monedasText.text = "Monedas: " + monedas;
     }
 }
