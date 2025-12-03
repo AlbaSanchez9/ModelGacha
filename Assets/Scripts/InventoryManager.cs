@@ -86,7 +86,7 @@ public class InventoryManager : MonoBehaviour
             GameObject obj = Instantiate(prefab, inventoryContainer);
             obj.transform.localPosition = startPos + pos;
             obj.transform.localRotation = Quaternion.identity;
-            obj.transform.localScale = Vector3.one * 0.3f; // Ajusta tamaño si hace falta
+            obj.transform.localScale = Vector3.one * 0.6f; // Ajusta tamaño si hace falta
 
             // Desactivar interacción mientras estamos en inventario
             PrizeController controller = obj.GetComponent<PrizeController>();
@@ -123,7 +123,7 @@ public class InventoryManager : MonoBehaviour
 
         item.transform.localPosition = Vector3.zero; // Centrar
         item.transform.localRotation = Quaternion.identity;
-        item.transform.localScale = Vector3.one * 0.5f; // Escala más grande
+        item.transform.localScale = Vector3.one * 1f; // Escala más grande
 
         currentDetailObject = item;
 
@@ -166,7 +166,7 @@ public class InventoryManager : MonoBehaviour
 
             child.localPosition = startPos + pos;
             child.localRotation = Quaternion.identity;
-            child.localScale = Vector3.one * 0.3f;
+            child.localScale = Vector3.one * 0.6f;
 
             // Asegurarse de que PrizeController esté desactivado
             PrizeController pc = child.GetComponent<PrizeController>();
