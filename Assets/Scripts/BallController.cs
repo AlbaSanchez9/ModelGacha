@@ -9,8 +9,8 @@ public class BallController : MonoBehaviour
     private GachaItem containedItem;
     private bool isOpened = false;
 
-    [SerializeField] private Animator animator; // Animator para animaciones
-    [SerializeField] private Transform parentMarker; // El marcador AR donde se coloca la bola
+    [SerializeField] private Animator animator; // Animator para bola
+    [SerializeField] private Transform parentMarker; // image target
 
     private Animator doorAnimator;
     private Gacha gachaManager;
@@ -102,10 +102,22 @@ public class BallController : MonoBehaviour
     // -------------------------------
     private void OpenBall()
     {
+        if (!isOpened)
+            StartCoroutine(OpenBallRoutine());
+    }
+
+    private IEnumerator OpenBallRoutine()
+    {
         isOpened = true;
 
         if (animator != null)
+        {
+            animator.ResetTrigger("Open");
             animator.SetTrigger("Open");
+
+        }
+
+        yield return new WaitForSeconds(0.6f);
 
         GameObject premio = null;
 
@@ -152,7 +164,7 @@ public class BallController : MonoBehaviour
             gachaManager.MostrarPremio(premio);
         }
 
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 0.7f);
     }
 }
 

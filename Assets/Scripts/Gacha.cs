@@ -11,6 +11,7 @@ public class Gacha : MonoBehaviour
 
     [SerializeField] private Animator palancaAnimator;
     [SerializeField] private Animator doorAnimator;
+    [SerializeField] private Animator ballAnimator;
 
     [SerializeField] private GameObject maquinaCompleta;
     [SerializeField] private Animator maquinaAnimator;
@@ -67,9 +68,9 @@ public class Gacha : MonoBehaviour
     private void LoadBallPrefabs()
     {
         ballPrefabs = new GameObject[3];
-        ballPrefabs[0] = Resources.Load<GameObject>("Prefabs/Ball_3");
-        ballPrefabs[1] = Resources.Load<GameObject>("Prefabs/Ball_4");
-        ballPrefabs[2] = Resources.Load<GameObject>("Prefabs/Ball_5");
+        ballPrefabs[0] = Resources.Load<GameObject>("Prefabs/Bola3");
+        ballPrefabs[1] = Resources.Load<GameObject>("Prefabs/Bola4");
+        ballPrefabs[2] = Resources.Load<GameObject>("Prefabs/Bola5");
 
         for (int i = 0; i < ballPrefabs.Length; i++)
         {
