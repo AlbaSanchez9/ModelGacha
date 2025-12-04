@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class PrizeController : MonoBehaviour
 {
@@ -35,28 +36,30 @@ public class PrizeController : MonoBehaviour
         }
 
         // Móvil con un dedo
-        if (Touchscreen.current != null && Touchscreen.current.touches.Count == 1)
+        if (Touchscreen.current == null) return;
+
+        var touch = Touchscreen.current.primaryTouch;
+
+        if (touch.press.isPressed)
         {
-            var touch = Touchscreen.current.touches[0];
-            if (touch.press.isPressed)
+            Vector2 touchPos = touch.position.ReadValue();
+
+            if (!isDragging)
             {
-                Vector2 touchPos = touch.position.ReadValue();
-                if (!isDragging)
-                {
-                    lastTouchPosition = touchPos;
-                    isDragging = true;
-                }
-                else
-                {
-                    Vector2 delta = touchPos - lastTouchPosition;
-                    transform.Rotate(Vector3.up, -delta.x * rotationSpeed, Space.World);
-                    transform.Rotate(Vector3.right, delta.y * rotationSpeed, Space.World);
-                    lastTouchPosition = touchPos;
-                }
+                lastTouchPosition = touchPos;
+                isDragging = true;
             }
             else
             {
-                isDragging = false;
+                Vector2 delta = touchPos - lastTouchPosition;
+
+                // Ajusta rotationSpeed según lo rápido que quieras que gire
+                float mobileRotationSpeed = 0.5f;
+
+                transform.Rotate(Vector3.up, -delta.x * mobileRotationSpeed, Space.World);
+                transform.Rotate(Vector3.right, delta.y * mobileRotationSpeed, Space.World);
+
+                lastTouchPosition = touchPos;
             }
         }
         else
@@ -77,20 +80,30 @@ public class PrizeController : MonoBehaviour
         }
 
         // Móvil con pinch
-        if (Touchscreen.current != null && Touchscreen.current.touches.Count >= 2)
+        if (Touchscreen.current != null)
         {
-            var touch0 = Touchscreen.current.touches[0].position.ReadValue();
-            var touch1 = Touchscreen.current.touches[1].position.ReadValue();
+            // Filtrar solo los dedos que están activos
+            var activeTouches = new System.Collections.Generic.List<TouchControl>();
+            foreach (var t in Touchscreen.current.touches)
+            {
+                if (t.press.isPressed) activeTouches.Add(t);
+            }
 
-            float currentDistance = Vector2.Distance(touch0, touch1);
-            if (lastPinchDistance > 0)
-                zoomDelta = (currentDistance - lastPinchDistance) * pinchZoomSpeed;
+            if (activeTouches.Count == 2)
+            {
+                Vector2 touch0 = activeTouches[0].position.ReadValue();
+                Vector2 touch1 = activeTouches[1].position.ReadValue();
 
-            lastPinchDistance = currentDistance;
-        }
-        else
-        {
-            lastPinchDistance = 0f;
+                float currentDistance = Vector2.Distance(touch0, touch1);
+                if (lastPinchDistance > 0f)
+                    zoomDelta = (currentDistance - lastPinchDistance) * pinchZoomSpeed;
+
+                lastPinchDistance = currentDistance;
+            }
+            else
+            {
+                lastPinchDistance = 0f;
+            }
         }
 
         // Aplicar zoom
