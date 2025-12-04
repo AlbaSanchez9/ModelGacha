@@ -125,6 +125,11 @@ public class BallController : MonoBehaviour
         {
             bool esNuevo = !InventoryManager.Instance.TieneItem(containedItem.GetPrefab());
 
+            if (gachaManager != null)
+            {
+                gachaManager.SpawnParticles(rarity, prizePoint.position);
+            }
+
             premio = Instantiate(containedItem.GetPrefab(), prizePoint.position, Quaternion.identity);
             premio.transform.SetParent(prizePoint);
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Gacha : MonoBehaviour
@@ -34,6 +35,11 @@ public class Gacha : MonoBehaviour
 
     [SerializeField] private GameObject feedbackPanelMonedas;
     [SerializeField] private TMPro.TextMeshProUGUI feedbackTextMonedas;
+
+    [SerializeField] private GameObject particles3Star;
+    [SerializeField] private GameObject particles4Star;
+    [SerializeField] private GameObject particles5Star;
+    private List<GameObject> activeParticles = new List<GameObject>();
 
     void Start()
     {
@@ -234,6 +240,13 @@ public class Gacha : MonoBehaviour
 
         if (monedasText != null)
             monedasText.gameObject.SetActive(true);
+
+        foreach (var p in activeParticles)
+        {
+            if (p != null)
+                Destroy(p);
+        }
+        activeParticles.Clear();
     }
 
     public void ShowFeedback(string mensaje)
@@ -276,5 +289,22 @@ public class Gacha : MonoBehaviour
     {
         if (monedasText != null)
             monedasText.text = "Monedas: " + monedas;
+    }
+
+    public void SpawnParticles(int rarity, Vector3 position)
+    {
+        GameObject prefab = null;
+        switch (rarity)
+        {
+            case 3: prefab = particles3Star; break;
+            case 4: prefab = particles4Star; break;
+            case 5: prefab = particles5Star; break;
+        }
+
+        if (prefab != null)
+        {
+            GameObject particles = Instantiate(prefab, position, Quaternion.identity);
+            activeParticles.Add(particles);
+        }
     }
 }

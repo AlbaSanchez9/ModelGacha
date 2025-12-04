@@ -3463,6 +3463,9 @@ MonoBehaviour:
   monedasText: {fileID: 901692341}
   feedbackPanelMonedas: {fileID: 1257151231}
   feedbackTextMonedas: {fileID: 2407061}
+  particles3Star: {fileID: 2297357469328541271, guid: dbc054bd67e265a4dbbbc3385c9bd0da, type: 3}
+  particles4Star: {fileID: 5089295404545122829, guid: 8cc3abf4f85ec9a4797580235b6301d4, type: 3}
+  particles5Star: {fileID: 2058931413026324371, guid: aa768f31868946040a9055b25b3d2232, type: 3}
 --- !u!4 &1906685745
 Transform:
   m_ObjectHideFlags: 0
