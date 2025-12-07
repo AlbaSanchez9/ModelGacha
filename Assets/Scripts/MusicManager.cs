@@ -40,6 +40,7 @@ public class MusicManager : MonoBehaviour
         musicSource.clip = bgm;
     }
 
+    // Reproduce la música
     public void Play()
     {
         if (musicSource.clip == null)
@@ -50,11 +51,13 @@ public class MusicManager : MonoBehaviour
         musicSource.Play();
     }
 
+    // Detiene la música
     public void Stop()
     {
         musicSource.Stop();
     }
 
+    // Cambia el volumen de la música
     public void SetVolume(float volume)
     {
         musicSource.volume = Mathf.Clamp01(volume);

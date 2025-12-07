@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gacha : MonoBehaviour
 {
     private GachaItem[] items;          // la lista de items se crea por código
-    private GameObject[] ballPrefabs;     // "plantilla" de bola que creamos en Start()
+    private GameObject[] ballPrefabs;     //plantilla de bola 
 
     [SerializeField] private Transform spawnPoint;       // punto donde aparecerán las bolas
     [SerializeField] private Transform prizePoint;
@@ -19,6 +19,7 @@ public class Gacha : MonoBehaviour
 
     [SerializeField] private GameObject botonVolver;
     [SerializeField] private GameObject botonTirar;
+    [SerializeField] private GameObject botonExit;
 
     [SerializeField] private float bolaDelay = 0.3f; // delay entre palanca y bola
 
@@ -58,6 +59,7 @@ public class Gacha : MonoBehaviour
         ActualizarUI();
     }
 
+    // Tirar del gacha
     public void TirarPalanca()
     {
         if (monedas < costoPorTirada)
@@ -77,7 +79,7 @@ public class Gacha : MonoBehaviour
     {
         bolaEnJuego = true;
 
-        // 1️⃣ Activar animación de la palanca
+        // Activar animación de la palanca
         if (palancaAnimator != null)
             palancaAnimator.SetTrigger("Pull");
 
@@ -85,13 +87,14 @@ public class Gacha : MonoBehaviour
         if (doorAnimator != null)
             doorAnimator.SetBool("isOpen", true);
 
-        // 2️⃣ Esperar un poco
+        // Esperar 
         yield return new WaitForSeconds(delay);
 
-        // 3️⃣ Instanciar bola
+        //Instanciar bola
         Roll();
     }
 
+    // Cargar las bolas
     private void LoadBallPrefabs()
     {
         ballPrefabs = new GameObject[3];
@@ -108,7 +111,7 @@ public class Gacha : MonoBehaviour
         }
     }
 
-    // Creamos los objetos del gacha por código
+    // Crear los premios 
     private void CreateItems()
     {
         items = new GachaItem[3];
@@ -118,13 +121,13 @@ public class Gacha : MonoBehaviour
         items[2] = new GachaItem("Bom", 5, Resources.Load<GameObject>("Prefabs/FiguraBom"));
     }
 
-    // Método público que inicia una tirada
+    // Método que inicia una tirada
     public void Roll()
     {
         int rarity = GetRandomRarity();
         Debug.Log("Ha salido una bola de " + rarity + " estrellas");
 
-        // Elegir el prefab correcto según la rareza
+        // Elegir el prefab según la rareza
         GameObject ballPrefab = GetBallPrefabByRarity(rarity);
         if (ballPrefab == null)
         {
@@ -146,6 +149,7 @@ public class Gacha : MonoBehaviour
             Debug.LogError("El prefab de la bola no tiene BallController.");
     }
 
+    // Probabilidad de tipo de premio
     private int GetRandomRarity()
     {
         float roll = Random.value; // Random.value devuelve un float entre 0.0 y 1.0
@@ -179,6 +183,7 @@ public class Gacha : MonoBehaviour
         return filtered[Random.Range(0, filtered.Length)];
     }
 
+    //Mostrar premio
     public void MostrarPremio(GameObject premio)
     {
         // Guardamos el premio para destruirlo al volver
@@ -190,6 +195,8 @@ public class Gacha : MonoBehaviour
             botonVerAnuncio.SetActive(false);
         if (monedasText != null)
             monedasText.gameObject.SetActive(false);
+        if (botonExit != null)
+            botonExit.SetActive(false);
     }
 
     public void HideMachine()
@@ -219,6 +226,7 @@ public class Gacha : MonoBehaviour
         bolaEnJuego = false;
     }
 
+    // Reset
     public void ResetToMachine()
     {
         if (premioActual != null)
@@ -238,6 +246,9 @@ public class Gacha : MonoBehaviour
         if (botonVerAnuncio != null)
             botonVerAnuncio.SetActive(true);
 
+        if (botonExit != null)
+            botonExit.SetActive(true);
+
         if (monedasText != null)
             monedasText.gameObject.SetActive(true);
 
@@ -249,12 +260,14 @@ public class Gacha : MonoBehaviour
         activeParticles.Clear();
     }
 
+    // Feedback 
     public void ShowFeedback(string mensaje)
     {
         StopAllCoroutines();        // Por si estaba mostrando otro mensaje antes
         StartCoroutine(ShowFeedbackRoutine(feedbackPanel, feedbackText, mensaje));
     }
 
+    // Feedback monedas disponibles
     public void ShowFeedbackMonedasDispo(string mensaje)
     {
         StopAllCoroutines();        // Por si estaba mostrando otro mensaje antes
@@ -268,11 +281,13 @@ public class Gacha : MonoBehaviour
         textComponent.text = mensaje;
         panel.SetActive(true);
 
-        yield return new WaitForSeconds(3f); // Tiempo visible
+        yield return new WaitForSeconds(3f);
 
         panel.SetActive(false);
     }
 
+
+    //Mostrar anuncio
     private void VerAnuncio()
     {
         AdsManager.instance.ShowRewardedAd();
@@ -291,6 +306,7 @@ public class Gacha : MonoBehaviour
             monedasText.text = "Monedas: " + monedas;
     }
 
+    //Mostrar partículas
     public void SpawnParticles(int rarity, Vector3 position)
     {
         GameObject prefab = null;

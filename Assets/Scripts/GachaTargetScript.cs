@@ -18,7 +18,7 @@ public class GachaTargetScript : MonoBehaviour
             feecbackMonedas.SetActive(false);
     }
 
-    // Se llama automáticamente desde Vuforia cuando el target se detecta
+    // Método que se ejecuta cuando el target es detectado
     public void OnTargetFound()
     {
         if (botonTirar != null)
@@ -31,7 +31,7 @@ public class GachaTargetScript : MonoBehaviour
             feecbackMonedas.SetActive(true);
     }
 
-    // Se llama automáticamente desde Vuforia cuando el target se pierde
+    // Método que se ejecuta cuando el target se pierde
     public void OnTargetLost()
     {
         if (botonTirar != null)

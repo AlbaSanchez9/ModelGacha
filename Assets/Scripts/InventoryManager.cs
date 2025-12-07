@@ -7,6 +7,7 @@ public class InventoryManager : MonoBehaviour
     private List<GameObject> collectedPrefabs = new List<GameObject>();
     [SerializeField] private Transform inventoryContainer;
     [SerializeField] private GameObject backButton;
+    [SerializeField] private GameObject botonExit;
 
     private GameObject currentDetailObject = null;
 
@@ -104,6 +105,9 @@ public class InventoryManager : MonoBehaviour
 
         if (backButton != null)
             backButton.SetActive(false);
+
+        if (botonExit != null)
+            botonExit.SetActive(true);
     }
 
     // Modo detalle de un objeto
@@ -129,12 +133,16 @@ public class InventoryManager : MonoBehaviour
 
         if (backButton != null)
             backButton.SetActive(true);
+
+        if (botonExit != null)
+            botonExit.SetActive(false);
     }
 
 
     // Volver al inventario
     public void BackToInventory()
     {
+
         if (currentDetailObject != null)
         {
             // Desactivar interacción del detalle
@@ -178,6 +186,9 @@ public class InventoryManager : MonoBehaviour
 
         if (backButton != null)
             backButton.SetActive(false);
+
+        if (botonExit != null)
+            botonExit.SetActive(true);
     }
 
     public bool TieneItem(GameObject itemPrefab)

@@ -11,9 +11,10 @@ public class InventoryItemClick : MonoBehaviour
         this.itemObject = obj;
     }
 
-    // Método manual para que funcione con AR
+    // Método para detectar el clic usando un Ray para que funcione con AR
     public void CheckClick(Ray ray)
     {
+        // Lanza un rayo y verifica si colisiona con algún objeto
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.transform == transform)

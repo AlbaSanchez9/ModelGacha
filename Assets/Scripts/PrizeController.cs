@@ -25,9 +25,10 @@ public class PrizeController : MonoBehaviour
         //HandlePan();
     }
 
+    // Rotacion del objeto
     private void HandleRotation()
     {
-        // PC con ratón
+        // PC con raton
         if (Mouse.current != null && Mouse.current.leftButton.isPressed)
         {
             Vector2 mouseDelta = Mouse.current.delta.ReadValue();
@@ -68,6 +69,7 @@ public class PrizeController : MonoBehaviour
         }
     }
 
+    // Zoom del objeto
     private void HandleZoom()
     {
         float zoomDelta = 0f;
@@ -118,6 +120,7 @@ public class PrizeController : MonoBehaviour
 
     }
 
+    // Desplazamiento (PAN)
     private void HandlePan()
     {
         Vector2 panDelta = Vector2.zero;

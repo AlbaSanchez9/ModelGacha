@@ -16,9 +16,7 @@ public class BallController : MonoBehaviour
     private Gacha gachaManager;
     private Transform prizePoint;
 
-    // -------------------------------
     // Inicializar bola desde Gacha
-    // -------------------------------
     public void Initialize(int rarity, GachaItem item, Transform marker, Animator door, Gacha manager,Transform prizePoint)
     {
         this.rarity = rarity;
@@ -36,9 +34,7 @@ public class BallController : MonoBehaviour
         UpdateAppearance();
     }
 
-    // -------------------------------
     // Cambiar apariencia según rareza
-    // -------------------------------
     private void UpdateAppearance()
     {
         Renderer rend = GetComponent<Renderer>();
@@ -53,9 +49,7 @@ public class BallController : MonoBehaviour
         }
     }
 
-    // -------------------------------
     // Detectar toque en pantalla
-    // -------------------------------
     private void Update()
     {
         if (isOpened) return;
@@ -97,9 +91,7 @@ public class BallController : MonoBehaviour
         return results.Count > 0;
     }
 
-    // -------------------------------
     // Abrir bola y mostrar premio
-    // -------------------------------
     private void OpenBall()
     {
         if (!isOpened)
